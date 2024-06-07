@@ -55,7 +55,7 @@ DOWNLOAD_DIR="$HOME/Downloads/post-install-downloads"
 PYTHON_VERSION="3.12"
 NVIM_VERSION="0.10.0"
 
-install_apt() {
+function install_apt() {
 	echo -e "${Y}Updating and upgrading...${N}"
 	if sudo apt -y update && sudo apt -y upgrade 2>&1; then
 		echo -e "${Y}Installing packages...${N}"
@@ -70,7 +70,7 @@ install_apt() {
 	fi
 }
 
-install_deb() {
+function install_deb() {
 	echo -e "${Y}Installing .deb packages...${N}"
 	mkdir -p $DOWNLOAD_DIR
 	for url in "${DEB_INSTALL[@]}"; do
@@ -87,7 +87,7 @@ install_deb() {
 	echo -e "${G}.deb package installations completed.${N}"
 }
 
-install_flatpak() {
+function install_flatpak() {
 	if ! flatpak remote-list | grep -q "flathub"; then
 		echo -e "${Y}Adding Flathub repository...${N}"
 		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -124,7 +124,7 @@ function install_pyenv() {
 	fi
 }
 
-install_awscli() {
+function install_awscli() {
 	local AWS_CLI="curl \
         "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o \
         "awscliv2.zip" 2>&1 &&
@@ -202,7 +202,7 @@ function add_fonts() {
 	rm -rf JetBrainsMono.zip JetBrainsMono
 }
 
-gsettings_config() {
+function gsettings_config() {
 	echo -e "${Y}Applying gsettings...${N}"
 	declare -a gsettings_list=(
 		"org.gnome.mutter edge-tiling false"
@@ -245,7 +245,7 @@ gsettings_config() {
 	done
 }
 
-bashrc_append() {
+function bashrc_append() {
 	echo -e "${Y}Adding config to .bashrc...${N}"
 
 	BASHRC_ADDITIONS="
@@ -288,7 +288,7 @@ export EDITOR=nvim
 	echo "$BASHRC_ADDITIONS" >>~/.bashrc
 }
 
-cleanup() {
+function cleanup() {
 	sudo apt update -y &>/dev/null
 	sudo apt upgrade -y &>/dev/null
 	echo -e "${Y}Cleaning up...${N}"
@@ -306,7 +306,7 @@ cleanup() {
 	# gnome-session-quit --logout --no-prompt
 }
 
-main() {
+function main() {
 	install_apt
 	install_deb
 	install_flatpak
