@@ -18,6 +18,7 @@ APT_INSTALL=(
 	jq
 	curl
 	make
+	unzip
 	# pyenv
 	build-essential
 	libssl-dev
@@ -121,6 +122,22 @@ function install_pyenv() {
 		else
 			echo -e "${R}Pyenv installation failed.${N}"
 		fi
+	fi
+}
+
+function install_python() {
+	# need to figure out how to source .bashrc from here...
+	export PATH="$HOME/.pyenv/bin:$PATH"
+	eval "$(pyenv init --path)"
+	eval "$(pyenv init -)"
+
+	if pyenv versions | grep -q "${PYTHON_VERSION}"; then
+		echo -e "${G}Python ${PYTHON_VERSION} is already installed.${N}"
+	else
+		echo -e "${Y}Installing Python ${PYTHON_VERSION}...${N}"
+		pyenv install ${PYTHON_VERSION} >/dev/null 2>&1
+		pyenv global ${PYTHON_VERSION} >/dev/null 2>&1
+		echo -e "${G}Python ${PYTHON_VERSION} installation completed.${N}"
 	fi
 }
 
@@ -312,6 +329,7 @@ function main() {
 	install_flatpak
 	install_neovim
 	install_pyenv
+	install_python
 	install_nvm_node
 	install_awscli
 	install_terraform
