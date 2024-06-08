@@ -196,7 +196,7 @@ function install_docker() {
 
 function install_nvm_node() {
 	echo -e "${Y}Installing nvm and node...${N}"
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash &>/dev/null
+	curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash &>/dev/null
 	source ~/.nvm/nvm.sh &>/dev/null
 	nvm install node &>/dev/null
 	nvm use node &>/dev/null
@@ -217,6 +217,7 @@ function add_fonts() {
 	unzip JetBrainsMono.zip -d JetBrainsMono &>/dev/null
 	cp JetBrainsMono/*.ttf ~/.local/share/fonts
 	rm -rf JetBrainsMono.zip JetBrainsMono
+	sudo fc-cache -fv &>/dev/null
 }
 
 function gsettings_config() {
@@ -249,9 +250,15 @@ function gsettings_config() {
 		"org.gnome.desktop.interface monospace-font-name 'Ubuntu Mono 13'"
 		"org.gnome.desktop.wm.preferences titlebar-font 'Ubuntu Bold 11'"
 	)
+	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-up "['<Shift>F3']"
+	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-mute "['<Shift>F1']"
+	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down "['<Shift>F1']"
 	gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
+
 	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ use-system-font false
 	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ font 'JetBrainsMono Nerd Font Mono 15'
+
+	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ cursor-blink-mode 'on'
 
 	for setting in "${gsettings_list[@]}"; do
 		if eval gsettings set $setting >/dev/null 2>&1; then
