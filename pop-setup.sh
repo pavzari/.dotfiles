@@ -111,7 +111,7 @@ function install_pyenv() {
 		echo -e "${G}Pyenv already installed.${N}"
 	else
 		echo -e "${Y}Installing pyenv...${N}"
-		if curl https://pyenv.run | bash >/dev/null 2>&1; then
+		if curl -s https://pyenv.run | bash >/dev/null 2>&1; then
 			{
 				printf '\n\n# PYENV: \n'
 				printf 'export PYENV_ROOT="$HOME/.pyenv"\n'
@@ -164,7 +164,7 @@ function install_terraform() {
 		echo -e "${G}Terraform already installed.${N}"
 	else
 		echo -e "${Y}Installing Terraform...${N}"
-		wget -q -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg 2>&1
+		wget -q -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg &>/dev/null
 		echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list 2>&1
 		sudo apt update -y &>/dev/null
 		if sudo apt install -y terraform >/dev/null 2>&1; then
@@ -255,7 +255,6 @@ function gsettings_config() {
 	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down "['<Shift>F1']"
 	gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
 
-	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ use-system-font false
 	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ font 'JetBrainsMono Nerd Font Mono 15'
 
 	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ cursor-blink-mode 'on'
