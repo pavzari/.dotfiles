@@ -227,7 +227,6 @@ function gsettings_config() {
 		"org.gnome.shell.extensions.pop-shell tile-by-default true"
 		"org.gnome.shell.extensions.pop-shell active-hint true"
 		"org.gnome.shell.extensions.pop-shell active-hint-border-radius 'uint32 0'"
-		# "org.gtk.settings.color-chooser selected-color '(true, 0.70196078431372544, 0.541176470)'"
 		"org.gnome.nautilus.preferences default-folder-viewer 'list-view'"
 		"org.gnome.nautilus.list-view default-zoom-level 'small'"
 		"org.gnome.shell.extensions.pop-shell show-title false"
@@ -254,9 +253,9 @@ function gsettings_config() {
 	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-mute "['<Shift>F1']"
 	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down "['<Shift>F1']"
 	gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
+	gsettings set org.gnome.shell.extensions.pop-shell hint-color-rgba "rgba(179,142,61,0.351351)"
 
 	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ font 'JetBrainsMono Nerd Font Mono 15'
-
 	gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ cursor-blink-mode 'on'
 
 	for setting in "${gsettings_list[@]}"; do
