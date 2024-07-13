@@ -205,7 +205,7 @@ function install_nvm_node() {
 function install_neovim() {
 	echo -e "${Y}Installing neovim...${N}"
 	curl -LO https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux64.tar.gz &>/dev/null
-	sudo rm -rf /opt/nvim
+	sudo rm -rf /opt/nvim*
 	sudo tar -C /opt -xzf nvim-linux64.tar.gz &>/dev/null
 	rm nvim-linux64.tar.gz
 }
@@ -284,10 +284,10 @@ parse_git_status() {
   if [[ -d .git ]] || git rev-parse --is-inside-work-tree &> /dev/null; then
     local status
     status=$(git status 2>/dev/null | tr -d '\n')
-    if [[ \"$status\" == *\"working tree clean\"* ]]; then
-      echo \" ✔\"
+    if [[ $status == *'working tree clean'* ]]; then
+      echo ' ✔'
     else
-      echo \" ✘\"
+      echo ' ✘'
     fi
   fi
 }
