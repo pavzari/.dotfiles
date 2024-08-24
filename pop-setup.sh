@@ -251,7 +251,7 @@ function gsettings_config() {
 	)
 	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-up "['<Shift>F3']"
 	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-mute "['<Shift>F1']"
-	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down "['<Shift>F1']"
+	gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down "['<Shift>F2]"
 	gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
 	gsettings set org.gnome.shell.extensions.pop-shell hint-color-rgba "rgba(179,142,61,0.351351)"
 
