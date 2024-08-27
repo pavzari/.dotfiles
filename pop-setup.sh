@@ -208,6 +208,10 @@ function install_neovim() {
 	sudo rm -rf /opt/nvim*
 	sudo tar -C /opt -xzf nvim-linux64.tar.gz &>/dev/null
 	rm nvim-linux64.tar.gz
+
+    echo -e "${Y}Copying Neovim config...${N}"
+    rm -rf ~/.config/nvim
+    cp -r ./nvim ~/.config/
 }
 
 function add_fonts() {
