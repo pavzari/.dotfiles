@@ -1,5 +1,5 @@
 -- select all.
-vim.keymap.set("n", "sa", "ggvg")
+vim.keymap.set("n", "<leader>sa", "ggVG")
 
 -- unhighlight search results.
 vim.keymap.set("n", "<esc>", "<cmd>nohlsearch<cr>")
