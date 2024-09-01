@@ -9,7 +9,7 @@ return {
 				javascript = { "prettier" },
 				markdown = { "prettier" },
 				lua = { "stylua" },
-				bash = { "shfmt" },
+				sh = { "shfmt" },
 				html = { "prettier" },
 				css = { "prettier" },
 				json = { "prettier" },

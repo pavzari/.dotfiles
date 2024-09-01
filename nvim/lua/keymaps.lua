@@ -7,9 +7,6 @@ vim.keymap.set("n", "<esc>", "<cmd>nohlsearch<cr>")
 -- replace %s all instances of highlighted word.
 vim.keymap.set("v", "<leader>r", '"hy:%s/<c-r>h//g<left><left>')
 
--- exit terminal without closing it.
-vim.keymap.set("t", "<esc>", [[<c-\><c-n>]])
-
 -- move selected lines in visual mode up or down.
 vim.keymap.set("v", "J", ":m '>+1<cr>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")

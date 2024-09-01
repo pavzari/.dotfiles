@@ -16,6 +16,7 @@ return {
 					"black",
 					"shfmt",
 					"ruff",
+					"shellcheck",
 					-- "eslint_d",
 				},
 			})
@@ -33,6 +34,7 @@ return {
 					"pyright",
 					"html",
 					"gopls",
+					"bashls", -- uses shellcheck by default for linting.
 				},
 
 				handlers = {
