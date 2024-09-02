@@ -3,6 +3,9 @@ vim.opt.wrap = true
 vim.opt.linebreak = true
 vim.opt.colorcolumn = "85"
 vim.opt.breakindent = true
+vim.opt.number = false
+vim.opt.relativenumber = false
+vim.opt.signcolumn = "yes"
 
 -- For easier navigation in wrapped lines
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })

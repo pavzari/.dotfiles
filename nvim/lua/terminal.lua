@@ -16,6 +16,7 @@ local function toggle_terminal()
 		vim.opt_local.relativenumber = false
 		vim.opt_local.cursorline = false
 		vim.opt_local.signcolumn = "no"
+		vim.opt.spell = false
 		vim.cmd("startinsert")
 	else
 		-- If terminal exists, toggle its visibility.
@@ -32,6 +33,13 @@ local function toggle_terminal()
 		end
 	end
 end
+
+local function move_terminal_to_right()
+	vim.cmd("wincmd L")
+	vim.cmd("vertical resize 60")
+end
+
+vim.keymap.set("t", "<leader>r", move_terminal_to_right, { noremap = true, silent = true })
 vim.keymap.set("t", "<esc>", [[<c-\><c-n>]]) -- exit terminal insert mode.
 vim.keymap.set({ "n", "t" }, "<leader>`", toggle_terminal, { noremap = true, silent = true }) -- toggle_terminal.
 vim.keymap.set("t", "<leader>q", [[<C-\><C-n>:bd!<CR>]], { noremap = true, silent = true }) -- delete terminal buffer.

@@ -80,7 +80,7 @@ Statusline.active = function()
 		lsp_diagnostics(),
 		" ",
 		"%#StatusLine#",
-		"%l:%c %P",
+		"%l:%c (%P)",
 	})
 end
 
