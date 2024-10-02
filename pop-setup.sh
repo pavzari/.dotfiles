@@ -214,6 +214,36 @@ function install_neovim() {
     cp -r ./nvim ~/.config/
 }
 
+function install_tailscale() {
+    echo -e "${Y}Installing tailscale...${N}"
+    curl -fsSL https://tailscale.com/install.sh | sh &>/dev/null
+}
+
+function install_syncthing() {
+    echo -e "${Y}Installing syncthing...${N}"
+    sudo mkdir -p /etc/apt/keyrings
+    sudo curl -L -o /etc/apt/keyrings/syncthing-archive-keyring.gpg https://syncthing.net/release-key.gpg &>/dev/null
+    echo "deb [signed-by=/etc/apt/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list &>/dev/null
+    sudo apt update &>/dev/null
+    sudo apt install syncthing &>/dev/null
+    sudo systemctl enable syncthing@$USER.service &>/dev/null
+    sudo systemctl start syncthing@$USER.service &>/dev/null
+    sleep 5
+
+    CONFIG_FILE=~/.local/state/syncthing/config.xml
+
+    if [[ -f "$CONFIG_FILE" ]]; then
+        # Disable relays
+        sed -i 's|<relaysEnabled>true</relaysEnabled>|<relaysEnabled>false</relaysEnabled>|g' "$CONFIG_FILE"
+
+        # Change the GUI address to 0.0.0.0:8384 for access outside localhost
+        sed -i 's|<address>127.0.0.1:8384</address>|<address>0.0.0.0:8384</address>|g' "$CONFIG_FILE"
+    else
+        echo "Syncthing config file not found: $CONFIG_FILE" &>/dev/null
+    fi
+    sudo systemctl restart syncthing@$USER.service &>/dev/null
+}
+
 function add_fonts() {
     echo -e "${Y}Adding fonts...${N}"
     mkdir -p ~/.local/share/fonts
@@ -224,7 +254,7 @@ function add_fonts() {
     sudo fc-cache -fv &>/dev/null
 }
 
-function gsettings_config() {
+function popos_gsettings_config() {
     echo -e "${Y}Applying gsettings...${N}"
     declare -a gsettings_list=(
         "org.gnome.mutter edge-tiling false"
@@ -343,8 +373,10 @@ function main() {
     install_awscli
     install_terraform
     install_docker
+    install_tailscale
+    install_syncthing
     add_fonts
-    gsettings_config
+    popos_gsettings_config
     bashrc_append
     cleanup
 }

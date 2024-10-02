@@ -13,7 +13,7 @@ vim.opt.sidescrolloff = 10
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
-vim.opt.cmdheight = 0
+-- vim.opt.cmdheight = 0
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true

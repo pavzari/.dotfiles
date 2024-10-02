@@ -39,8 +39,15 @@ local function move_terminal_to_right()
 	vim.cmd("vertical resize 60")
 end
 
+-- Always switch to insert mode when moving to terminal split.
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+	pattern = "term://*",
+	command = "startinsert",
+})
+
 vim.keymap.set("t", "<leader>r", move_terminal_to_right, { noremap = true, silent = true })
 vim.keymap.set("t", "<esc>", [[<c-\><c-n>]]) -- exit terminal insert mode.
 vim.keymap.set({ "n", "t" }, "<leader>`", toggle_terminal, { noremap = true, silent = true }) -- toggle_terminal.
 vim.keymap.set("t", "<leader>q", [[<C-\><C-n>:bd!<CR>]], { noremap = true, silent = true }) -- delete terminal buffer.
 vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { noremap = true, silent = true }) -- move to above split without exiting insert mode.
+vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { noremap = true, silent = true }) -- move to left split without exiting insert mode.
