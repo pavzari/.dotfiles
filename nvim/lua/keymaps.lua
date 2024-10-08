@@ -44,6 +44,7 @@ vim.api.nvim_create_autocmd("lspattach", {
 		end
 		map("K", vim.lsp.buf.hover) -- display info about symbol under cursor. [default]
 		map("gd", vim.lsp.buf.definition) -- jump to the definition. Jump back: <c-t>.
+		map("ds", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>") -- gd but opens in a new split.
 		map("gr", require("telescope.builtin").lsp_references) -- find references for the symbol under cursor.
 		map("<leader>rn", vim.lsp.buf.rename) -- rename the symbol under cursor.
 		map("<leader>ca", vim.lsp.buf.code_action) -- code actions selection.
