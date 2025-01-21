@@ -136,7 +136,7 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 # This will be replaced with myconfig/scripts ...
-export PATH="$HOME/code/myconfig/scripts:$PATH"
+export PATH="$HOME/.dotfiles/scripts:$PATH"
 
 export FZF_DEFAULT_OPTS="--color=gutter:-1"
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
@@ -188,16 +188,17 @@ function extract() {
 bind '"\C-f":"__tmux_sessionizer.sh\n"'
 bind '"\C-g":"__fuzzy_finder.sh\n"'
 
-alias zsc="source ~/.config/zsh/.zshrc"
+alias zsc="source ~/.zshrc"
 alias bsc="source ~/.bashrc"
 
 alias nedit="vim ~/.config/nvim"
-alias tedit="vim ~/.tmux.conf"
+alias tedit="vim ~/.config/tmux/tmux.conf"
 alias zedit="vim ~/.zshrc"
 alias bedit="vim ~/.bashrc"
 
 alias notes="cd ~/notes"
 alias code="cd ~/code"
+alias misc="cd ~/misc"
 alias ...="cd ../.."
 alias ..="cd .."
 
@@ -205,7 +206,7 @@ alias vim="nvim"
 
 alias ds="du -Sh | sort -n -r | more"
 
-alias tat="__tmux_attach_cwd.sh"
+alias tat="__tmux_attach.sh"
 alias ses="__tmux_sessionizer.sh"
 alias nts="__add_repo_notes.sh"
 
