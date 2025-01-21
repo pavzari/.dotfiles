@@ -1,0 +1,21 @@
+[user]
+	name = pavzari
+    email = 92022046+pavzari@users.noreply.github.com
+
+[commit]
+    verbose = true
+
+[init]
+    defaultBranch = main
+
+[core]
+    editor = nvim
+
+[diff]
+    algorithm = histogram
+
+[log]
+    date = iso
+
+[alias]
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative

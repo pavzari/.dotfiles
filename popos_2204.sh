@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 R='\e[1;91m'
 G='\e[1;92m'
@@ -6,20 +6,25 @@ Y='\e[1;93m'
 N='\e[0m'
 
 APT_INSTALL=(
-    gnome-tweaks
-    ranger
-    htop
-    qbittorrent
-    calibre
-    pavucontrol
-    ripgrep
-    wget
     slack-desktop
+    gnome-tweaks
+    qbittorrent
+    pavucontrol
+    calibre
+    ripgrep
+    ranger
+    tmux
+    stow
+    htop
+    fzf
+    bat
+    wget
+    git
     jq
     curl
     make
     unzip
-    # pyenv
+    # pyenv deps:
     build-essential
     libssl-dev
     zlib1g-dev
@@ -34,10 +39,10 @@ APT_INSTALL=(
     libffi-dev
     liblzma-dev
     python-openssl
-    # tf
+    # tf deps:
     gnupg
     software-properties-common
-    # docker
+    # docker deps:
     ca-certificates
     # nvim/clipboard
     xclip
@@ -60,7 +65,7 @@ function install_apt() {
     echo -e "${Y}Updating and upgrading...${N}"
     if sudo apt -y update && sudo apt -y upgrade 2>&1; then
         echo -e "${Y}Installing packages...${N}"
-        for program in ${APT_INSTALL[@]}; do
+        for program in "${APT_INSTALL[@]}"; do
             if ! dpkg -l | grep -q $program; then
                 echo -e "${Y}Installing $program...${N}"
                 sudo apt install $program -y &>/dev/null
@@ -73,7 +78,7 @@ function install_apt() {
 
 function install_deb() {
     echo -e "${Y}Installing .deb packages...${N}"
-    mkdir -p $DOWNLOAD_DIR
+    mkdir -p "$DOWNLOAD_DIR"
     for url in "${DEB_INSTALL[@]}"; do
         file_name=$(basename "$url")
         wget -q -O "${DOWNLOAD_DIR}$file_name" "$url"
@@ -96,7 +101,7 @@ function install_flatpak() {
         echo -e "${Y}Flathub repository is already added.${N}"
     fi
 
-    for program in ${FLATPAK_INSTALL[@]}; do
+    for program in "${FLATPAK_INSTALL[@]}"; do
         if ! flatpak list | grep -q $program; then
             echo -e "${Y}Installing $program...${N}"
             flatpak install flathub $program -y &>/dev/null
@@ -112,12 +117,6 @@ function install_pyenv() {
     else
         echo -e "${Y}Installing pyenv...${N}"
         if curl -s https://pyenv.run | bash >/dev/null 2>&1; then
-            {
-                printf '\n\n# PYENV: \n'
-                printf 'export PYENV_ROOT="$HOME/.pyenv"\n'
-                printf 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"\n'
-                printf 'eval "$(pyenv init -)"\n'
-            } >>"$HOME/.bashrc"
             echo -e "${G}Pyenv installation and configuration completed.${N}"
         else
             echo -e "${R}Pyenv installation failed.${N}"
@@ -126,7 +125,6 @@ function install_pyenv() {
 }
 
 function install_python() {
-    # need to figure out how to source .bashrc from here...
     export PATH="$HOME/.pyenv/bin:$PATH"
     eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
@@ -142,11 +140,11 @@ function install_python() {
 }
 
 function install_awscli() {
-    local AWS_CLI="curl \
+    local AWS_CLI='curl \
         "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o \
         "awscliv2.zip" 2>&1 &&
         unzip awscliv2.zip  2>&1 &&
-        sudo ./aws/install 2>&1"
+        sudo ./aws/install 2>&1'
     echo -e "${Y}Installing AWS CLI...${N}"
 
     if command -v aws &>/dev/null; then
@@ -185,8 +183,7 @@ function install_docker() {
         sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
     sudo apt update -y &>/dev/null
-    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin &>/dev/null
-
+    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin &>/devcn
     if sudo docker run hello-world >/dev/null 2>&1; then
         echo -e "${G}Docker installation completed.${N}"
     else
@@ -194,12 +191,12 @@ function install_docker() {
     fi
 }
 
-function install_nvm_node() {
-    echo -e "${Y}Installing nvm and node...${N}"
-    curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash &>/dev/null
-    source ~/.nvm/nvm.sh &>/dev/null
-    nvm install node &>/dev/null
-    nvm use node &>/dev/null
+function install_fnm_node() {
+    echo -e "${Y}Installing fnm and node...${N}"
+    curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell &>/dev/null
+    "$HOME/.local/share/fnm/fnm" install --lts &>/dev/null
+    LTS_VERSION=$("$HOME/.local/share/fnm/fnm" list | grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+' | tail -n 1)
+    "$HOME/.local/share/fnm/fnm" default "$LTS_VERSION" &>/dev/null
 }
 
 function install_neovim() {
@@ -208,10 +205,6 @@ function install_neovim() {
     sudo rm -rf /opt/nvim*
     sudo tar -C /opt -xzf nvim-linux64.tar.gz &>/dev/null
     rm nvim-linux64.tar.gz
-
-    echo -e "${Y}Copying Neovim config...${N}"
-    rm -rf ~/.config/nvim
-    cp -r ./nvim ~/.config/
 }
 
 function install_tailscale() {
@@ -226,8 +219,8 @@ function install_syncthing() {
     echo "deb [signed-by=/etc/apt/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list &>/dev/null
     sudo apt update &>/dev/null
     sudo apt install syncthing &>/dev/null
-    sudo systemctl enable syncthing@$USER.service &>/dev/null
-    sudo systemctl start syncthing@$USER.service &>/dev/null
+    sudo systemctl enable syncthing@"$USER".service &>/dev/null
+    sudo systemctl start syncthing@"$USER".service &>/dev/null
     sleep 5
 
     CONFIG_FILE=~/.local/state/syncthing/config.xml
@@ -239,9 +232,9 @@ function install_syncthing() {
         # Change the GUI address to 0.0.0.0:8384 for access outside localhost
         sed -i 's|<address>127.0.0.1:8384</address>|<address>0.0.0.0:8384</address>|g' "$CONFIG_FILE"
     else
-        echo "Syncthing config file not found: $CONFIG_FILE" &>/dev/null
+        echo "Syncthing config file not found: $CONFIG_FILE"
     fi
-    sudo systemctl restart syncthing@$USER.service &>/dev/null
+    sudo systemctl restart syncthing@"$USER".service &>/dev/null
 }
 
 function add_fonts() {
@@ -259,8 +252,8 @@ function popos_gsettings_config() {
     declare -a gsettings_list=(
         "org.gnome.mutter edge-tiling false"
         "org.gnome.shell.extensions.pop-shell tile-by-default true"
-        "org.gnome.shell.extensions.pop-shell active-hint true"
-        "org.gnome.shell.extensions.pop-shell active-hint-border-radius 'uint32 0'"
+        # "org.gnome.shell.extensions.pop-shell active-hint true"
+        # "org.gnome.shell.extensions.pop-shell active-hint-border-radius 'uint32 0'"
         "org.gnome.nautilus.preferences default-folder-viewer 'list-view'"
         "org.gnome.nautilus.list-view default-zoom-level 'small'"
         "org.gnome.shell.extensions.pop-shell show-title false"
@@ -287,7 +280,7 @@ function popos_gsettings_config() {
     gsettings set org.gnome.settings-daemon.plugins.media-keys volume-mute "['<Shift>F1']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down "['<Shift>F2]"
     gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
-    gsettings set org.gnome.shell.extensions.pop-shell hint-color-rgba "rgba(179,142,61,0.351351)"
+    # gsettings set org.gnome.shell.extensions.pop-shell hint-color-rgba "rgba(179,142,61,0.351351)"
 
     gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ font 'JetBrainsMono Nerd Font Mono 15'
     gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")/ cursor-blink-mode 'on'
@@ -299,52 +292,86 @@ function popos_gsettings_config() {
             echo -e "${R}$setting${N}"
         fi
     done
+
+    # Enable Wayland
+    FILE_PATH="/etc/gdm3/custom.conf"
+    sudo sed -i 's/^WaylandEnable=false/WaylandEnable=true/' "$FILE_PATH"
+    # sudo systemctl restart gdm.service
+
+    # Make some of the gnome title bars smaller.
+    mkdir -p "$HOME/.config/gtk-3.0"
+    cat >"$HOME/.config/gtk-3.0/gtk.css" <<EOF
+headerbar entry,
+headerbar spinbutton,
+headerbar button,
+headerbar separator {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  border-width: 0px;
+  /*min-height: 0px;*/
+}
+headerbar {
+  min-height: 24px;
+  padding-left: 1px;
+  padding-right: 1px;
+  margin: 0px;
+  padding: 0px;
+  border-radius: 0px;
+}
+decoration {
+  box-shadow: none;
+}
+EOF
 }
 
-function bashrc_append() {
-    echo -e "${Y}Adding config to .bashrc...${N}"
-
-    BASHRC_ADDITIONS="
-# MY ADDITIONS:
-alias notes='cd /home/pav/notes'
-alias vim='nvim'
-
-# Git status for PS1:
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+function install_starship() {
+    echo -e "${Y}Installing starship prompt...${N}"
+    yes | curl -sS https://starship.rs/install.sh | sh &>/dev/null
 }
 
-parse_git_status() {
-  if [[ -d .git ]] || git rev-parse --is-inside-work-tree &> /dev/null; then
-    local status
-    status=$(git status 2>/dev/null | tr -d '\n')
-    if [[ $status == *'working tree clean'* ]]; then
-      echo ' ✔'
-    else
-      echo ' ✘'
+function install_zsh() {
+    echo -e "${Y}Installing zsh...${N}"
+    sudo apt install -y zsh zsh-autosuggestions zsh-syntax-highlighting &>/dev/null
+    if [ "$SHELL" != "$(which zsh)" ]; then
+        chsh -s "$(which zsh)"
     fi
-  fi
 }
 
-# Python venv activation:
-venv() {
-    if [ -d \"venv\" ]; then
-        source venv/bin/activate
-    elif [ -d \".venv\" ]; then
-        source .venv/bin/activate
-    else
-        echo \"Python virtual environment not found in the current directory.\"
-    fi
+function install_wezterm() {
+    # Ubuntu22 stable
+    curl -LO https://github.com/wez/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb &>/dev/null
+    sudo apt install -y ./wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb &>/dev/null
+    rm wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
 }
 
-export PS1=\"\\[\e[32m\\]\u@\h\\[\e[00m\\]:\\[\e[94m\\]\w\\[\e[91m\\]\\\$(parse_git_status) \\\$(parse_git_branch)\\[\e[00m\\]$ \"
-export PATH=\$PATH:/opt/nvim-linux64/bin
-export EDITOR=nvim
-"
-    echo "$BASHRC_ADDITIONS" >>~/.bashrc
+function install_ghostty() {
+    echo -e "${Y}Installing ghostty...${N}"
+    sudo apt install -y llvm lld llvm-dev liblld-dev clang libclang-dev libglib2.0-dev libgtk-4-dev libadwaita-1-dev git
+    wget https://ziglang.org/download/0.13.0/zig-linux-x86_64-0.13.0.tar.xz -O /tmp/zig.tar.xz
+    tar -xf /tmp/zig.tar.xz -C /tmp
+    export PATH="/tmp/zig-linux-x86_64-0.13.0:$PATH"
+    git clone git@github.com:ghostty-org/ghostty.git ghostty
+    cd ghostty && zig build -p $HOME/.local -Doptimize=ReleaseFast
+
+    rm -f /tmp/zig.tar.xz
+    rm -rf /tmp/zig-linux-x86_64-0.13.0
+    rm -rf ghostty
+
+    # Edit .local/share/applications/com.mitchellh.ghostty.desktop to include full Exec path
+    # to bin $HOME/.local/bin/ghostty if pop app launcher does not start the term.
+}
+
+function install_uv() {
+    echo -e "${Y}Installing uv...${N}"
+    curl -LsSf https://astral.sh/uv/install.sh | sh &>/dev/null
 }
 
 function cleanup() {
+    # Remove pre-installed stuff:
+    sudo apt remove pop-shop &>/dev/null
+    sudo apt remove --purge libreoffice* &>/dev/null
+    apt remove pop-shop &>/dev/null
+
     sudo apt update -y &>/dev/null
     sudo apt upgrade -y &>/dev/null
     echo -e "${Y}Cleaning up...${N}"
@@ -353,13 +380,12 @@ function cleanup() {
     sudo apt autoremove -y &>/dev/null
     sudo apt clean &>/dev/null
 
-    # eval "$(cat ~/.bashrc | tail -n +10)" # skip the non-interactive execution breaker at the top of default .bashrc
-    echo -e "${G}Completed.${N}"
-    echo -e "${R}Reload the shell: Alt + F2 + r.${N}"
-
-    # echo -e "${R}Reloading the shell...${N}"
-    # sleep 3
+    # echo -e "${R}Reload the shell: Alt + F2 + r.${N}"
     # gnome-session-quit --logout --no-prompt
+
+    echo -e "${R}Rebooting to apply changes...${N}"
+    sleep 5
+    sudo reboot
 }
 
 function main() {
@@ -369,15 +395,18 @@ function main() {
     install_neovim
     install_pyenv
     install_python
-    install_nvm_node
+    install_fnm_node
     install_awscli
     install_terraform
     install_docker
     install_tailscale
     install_syncthing
+    install_uv
+    install_starship
+    install_wezterm
+    install_ghostty
     add_fonts
     popos_gsettings_config
-    bashrc_append
     cleanup
 }
 

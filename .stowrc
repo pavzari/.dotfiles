@@ -1,0 +1,8 @@
+--target=~/.config
+--ignore=.stowrc
+--ignore=git
+--ignore=zsh
+--ignore=bash
+--ignore=scripts
+--ignore=Makefile
+--ignore=popos_2204.sh
