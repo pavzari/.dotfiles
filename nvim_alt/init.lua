@@ -193,7 +193,8 @@ require("lazy").setup({
             auto_show = true,
             auto_show_delay_ms = 500,
             window = {
-              winhighlight = "Pmenu:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
+              border = "rounded",
+              winhighlight = "Pmenu:Normal,FloatBorder:Normal,CursorLine:BlinkCmpDocCursorLine,Search:None",
             },
           },
           menu = {

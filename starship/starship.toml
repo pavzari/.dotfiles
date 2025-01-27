@@ -16,7 +16,7 @@ disabled = true
 
 [git_metrics]
 only_nonzero_diffs = true
-disabled = false
+disabled = true
 format = '([+$added]($added_style))([-$deleted]($deleted_style) )'
 
 [git_commit]

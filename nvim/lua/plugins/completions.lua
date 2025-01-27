@@ -16,7 +16,8 @@ return {
         auto_show = true,
         auto_show_delay_ms = 500,
         window = {
-          winhighlight = "Pmenu:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
+          border = "rounded",
+          winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
         },
       },
       menu = {
