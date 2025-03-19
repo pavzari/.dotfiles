@@ -33,7 +33,6 @@ vim.opt.wrap = false
 vim.opt.clipboard = "unnamedplus"
 vim.opt.inccommand = "split"
 vim.opt.virtualedit = "block"
-vim.opt.termguicolors = true
 vim.g.have_nerd_font = true
 vim.opt.swapfile = false
 vim.g.python3_host_prog = os.getenv("HOME") .. "/.pyenv/shims/python"
@@ -307,6 +306,16 @@ require("lazy").setup({
             },
           },
         })
+      end,
+    },
+    {
+      "slugbyte/lackluster.nvim",
+      lazy = false,
+      priority = 1000,
+      init = function()
+        -- vim.cmd.colorscheme("lackluster")
+        vim.cmd.colorscheme("lackluster-hack")
+        -- vim.cmd.colorscheme("lackluster-mint")
       end,
     },
     {

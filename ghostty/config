@@ -1,11 +1,16 @@
 # ghostty +show-config --default
 
-theme = rose-pine-moon
+# .config/gtk-4.0/gtk.css
+# window {
+#   border-radius: 0 0;
+#   box-shadow: none;
+# }
+
+theme = rose-pine
 font-size = 15
-font-feature = -calt
-font-feature = -liga
-font-feature = -dlig
-window-decoration = false
+font-feature = -calt,-liga,-dlig
+window-decoration = none
+gtk-adwaita = false
 gtk-titlebar = false
 gtk-wide-tabs = false
 mouse-hide-while-typing = true

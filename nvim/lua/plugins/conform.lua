@@ -26,9 +26,9 @@ return {
       },
     })
 
-    conform.formatters.sql_formatter = {
-      prepend_args = { "-l", "postgresql", "-c", '{"keywordCase":"upper"}' },
-    }
+    -- conform.formatters.sql_formatter = {
+    --   prepend_args = { "-l", "postgresql", "-c", '{"keywordCase":"upper"}' },
+    -- }
 
     vim.keymap.set({ "n", "v" }, "<leader>gf", function()
       conform.format({

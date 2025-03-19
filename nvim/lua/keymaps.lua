@@ -27,6 +27,9 @@ vim.keymap.set("n", "<c-right>", ":vertical resize +2<cr>")
 vim.keymap.set("n", "<leader>x", ":.lua<CR>")
 vim.keymap.set("v", "<leader>x", ":lua<CR>")
 
+vim.keymap.set("n", "<TAB>", ":bnext<CR>")
+vim.keymap.set("n", "<S-TAB>", ":bprev<CR>")
+
 -- automatically close brackets, parenthesis, and quotes.
 -- vim.keymap.set("i", "'", "''<left>")
 -- vim.keymap.set("i", '"', '""<left>')

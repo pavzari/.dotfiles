@@ -15,10 +15,15 @@ setopt HIST_IGNORE_ALL_DUPS
 
 # Basic auto/tab complete
 autoload -U compinit
-zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit
-_comp_options+=(globdots) 
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'
+
+setopt GLOBDOTS
+setopt AUTOCD
 
 # Vi mode
 bindkey -v
@@ -95,7 +100,7 @@ alias cat='batcat --style=plain'
 alias vim="nvim"
 alias vima="NVIM_APPNAME='nvim_alt' vim"
 
-alias ds="du -Sh | sort -n -r | more"
+alias ds="du -Sh | sort -n -r | less"
 
 alias tat="__tmux_attach.sh"
 alias ses="__tmux_sessionizer.sh"
@@ -153,7 +158,6 @@ function extract () {
 }
 
 . "$HOME/.local/bin/env"
-. "$HOME/.cargo/env"
 
 # Pyenv
 export PYENV_ROOT="$HOME/.pyenv"
